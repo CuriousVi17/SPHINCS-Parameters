@@ -71,7 +71,7 @@ def draw_custom_euler(factors, counts):
     print(f"  [v] Diagram successfully saved to: {out_path}")
 
 def main():
-    csv_file = 'global_X_thresholds.csv'
+    csv_file = 'outputs_specialized/cat4_minimax/global_X_thresholds.csv'
     
     if not os.path.exists(csv_file):
         print(f"Error: Cannot find {csv_file} in the current directory.")
