@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.17)  20 MAY 2026 14:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.17)  20 MAY 2026 15:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -666,7 +666,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-<content/images/concentric_diagram.png, id=92, 693.0693pt x 512.1534pt>
+<content/images/concentric_diagram.png, id=102, 693.0693pt x 512.1534pt>
 File: content/images/concentric_diagram.png Graphic file (type png)
 <use content/images/concentric_diagram.png>
 Package pdftex.def Info: content/images/concentric_diagram.png  used on input line 72.
@@ -674,59 +674,59 @@ Package pdftex.def Info: content/images/concentric_diagram.png  used on input li
 
 
 [4 <./content/images/concentric_diagram.png>]
-<content/images/scatter_plot.png, id=104, 715.7139pt x 571.1739pt>
+<content/images/scatter_plot.png, id=114, 715.7139pt x 571.1739pt>
 File: content/images/scatter_plot.png Graphic file (type png)
 <use content/images/scatter_plot.png>
-Package pdftex.def Info: content/images/scatter_plot.png  used on input line 111.
-(pdftex.def)             Requested size: 362.37569pt x 289.19441pt.
+Package pdftex.def Info: content/images/scatter_plot.png  used on input line 115.
+(pdftex.def)             Requested size: 226.48395pt x 180.73997pt.
 
 
 [5 <./content/images/scatter_plot.png>]
-<content/images/sieve_step1_initial.png, id=114, 716.1957pt x 716.1957pt>
+<content/images/sieve_step1_initial.png, id=125, 716.1957pt x 716.1957pt>
 File: content/images/sieve_step1_initial.png Graphic file (type png)
 <use content/images/sieve_step1_initial.png>
-Package pdftex.def Info: content/images/sieve_step1_initial.png  used on input line 133.
+Package pdftex.def Info: content/images/sieve_step1_initial.png  used on input line 137.
 (pdftex.def)             Requested size: 144.95303pt x 144.95233pt.
-<content/images/sieve_step2_size.png, id=115, 716.1957pt x 716.1957pt>
+<content/images/sieve_step2_size.png, id=126, 716.1957pt x 716.1957pt>
 File: content/images/sieve_step2_size.png Graphic file (type png)
 <use content/images/sieve_step2_size.png>
-Package pdftex.def Info: content/images/sieve_step2_size.png  used on input line 140.
+Package pdftex.def Info: content/images/sieve_step2_size.png  used on input line 144.
 (pdftex.def)             Requested size: 144.95303pt x 144.95233pt.
-<content/images/sieve_step3_keygen.png, id=116, 716.1957pt x 716.1957pt>
+<content/images/sieve_step3_keygen.png, id=127, 716.1957pt x 716.1957pt>
 File: content/images/sieve_step3_keygen.png Graphic file (type png)
 <use content/images/sieve_step3_keygen.png>
-Package pdftex.def Info: content/images/sieve_step3_keygen.png  used on input line 147.
+Package pdftex.def Info: content/images/sieve_step3_keygen.png  used on input line 151.
 (pdftex.def)             Requested size: 144.95303pt x 144.95233pt.
-<content/images/sieve_step4_siggen.png, id=117, 716.1957pt x 716.1957pt>
+<content/images/sieve_step4_siggen.png, id=128, 716.1957pt x 716.1957pt>
 File: content/images/sieve_step4_siggen.png Graphic file (type png)
 <use content/images/sieve_step4_siggen.png>
-Package pdftex.def Info: content/images/sieve_step4_siggen.png  used on input line 157.
+Package pdftex.def Info: content/images/sieve_step4_siggen.png  used on input line 161.
 (pdftex.def)             Requested size: 144.95303pt x 144.95233pt.
-<content/images/sieve_step5_verify.png, id=118, 716.1957pt x 716.1957pt>
+<content/images/sieve_step5_verify.png, id=129, 716.1957pt x 716.1957pt>
 File: content/images/sieve_step5_verify.png Graphic file (type png)
 <use content/images/sieve_step5_verify.png>
-Package pdftex.def Info: content/images/sieve_step5_verify.png  used on input line 164.
+Package pdftex.def Info: content/images/sieve_step5_verify.png  used on input line 168.
 (pdftex.def)             Requested size: 144.95303pt x 144.95233pt.
-<content/images/sieve_step6_rho.png, id=119, 716.1957pt x 716.1957pt>
+<content/images/sieve_step6_rho.png, id=130, 716.1957pt x 716.1957pt>
 File: content/images/sieve_step6_rho.png Graphic file (type png)
 <use content/images/sieve_step6_rho.png>
-Package pdftex.def Info: content/images/sieve_step6_rho.png  used on input line 171.
+Package pdftex.def Info: content/images/sieve_step6_rho.png  used on input line 175.
 (pdftex.def)             Requested size: 144.95303pt x 144.95233pt.
 
 
 [6 <./content/images/sieve_step1_initial.png> <./content/images/sieve_step2_size.png> <./content/images/sieve_step3_keygen.png> <./content/images/sieve_step4_siggen.png> <./content/images/sieve_step5_verify.png> <./content/images/sieve_step6_rho.png>]
-<content/images/sieve_step7_distance_1.png, id=132, 716.1957pt x 622.4856pt>
+<content/images/sieve_step7_distance_1.png, id=142, 716.1957pt x 622.4856pt>
 File: content/images/sieve_step7_distance_1.png Graphic file (type png)
 <use content/images/sieve_step7_distance_1.png>
-Package pdftex.def Info: content/images/sieve_step7_distance_1.png  used on input line 215.
+Package pdftex.def Info: content/images/sieve_step7_distance_1.png  used on input line 217.
 (pdftex.def)             Requested size: 317.07614pt x 275.58522pt.
 
 
 [7 <./content/images/sieve_step7_distance_1.png>]
-<content/images/sieve_step7_distance_2.png, id=145, 716.1957pt x 618.1494pt>
+<content/images/sieve_step7_distance_2.png, id=156, 716.1957pt x 618.1494pt>
 File: content/images/sieve_step7_distance_2.png Graphic file (type png)
 <use content/images/sieve_step7_distance_2.png>
-Package pdftex.def Info: content/images/sieve_step7_distance_2.png  used on input line 248.
+Package pdftex.def Info: content/images/sieve_step7_distance_2.png  used on input line 250.
 (pdftex.def)             Requested size: 339.72592pt x 293.21843pt.
 )
 
@@ -742,21 +742,21 @@ L3 programming layer <2025-01-18>
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: F4667041FE0BD9CFAA145A2720C92856;1466.
+(rerunfilecheck)             Checksum: 18A398A2AB98555E7A402DCA665F7FDC;1809.
  ) 
 Here is how much of TeX's memory you used:
- 24539 strings out of 473190
- 451936 string characters out of 5715799
- 865648 words of memory out of 5000000
- 47216 multiletter control sequences out of 15000+600000
+ 24544 strings out of 473190
+ 452005 string characters out of 5715799
+ 865625 words of memory out of 5000000
+ 47218 multiletter control sequences out of 15000+600000
  575711 words of font info for 160 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,11n,91p,1064b,543s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on main.pdf (9 pages, 8824856 bytes).
+Output written on main.pdf (9 pages, 8825695 bytes).
 PDF statistics:
- 243 PDF objects out of 1000 (max. 8388607)
- 176 compressed objects within 2 object streams
- 40 named destinations out of 1000 (max. 500000)
- 43663 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 255 PDF objects out of 1000 (max. 8388607)
+ 188 compressed objects within 2 object streams
+ 43 named destinations out of 1000 (max. 500000)
+ 43679 words of extra memory for PDF output out of 51595 (max. 10000000)
 

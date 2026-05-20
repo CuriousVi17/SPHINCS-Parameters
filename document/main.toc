@@ -11,4 +11,5 @@
 \contentsline {subsection}{\numberline {3.3}Sweep Strategy}{3}{subsection.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.1}Case 1: Best In Class}{4}{subsubsection.3.3.1}%
 \contentsline {subsubsection}{\numberline {3.3.2}Case 2: Balanced Metrics}{4}{subsubsection.3.3.2}%
-\contentsline {paragraph}{Optimal Search Strategy}{5}{section*.8}%
+\contentsline {subsubsection}{\numberline {3.3.3}Case 3: Adaptive Search}{5}{subsubsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.4}Decisional weights}{6}{subsection.3.4}%

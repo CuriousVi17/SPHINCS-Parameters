@@ -95,30 +95,34 @@ Obviously, the smaller the multiplier $X$, the smaller number of candidates we g
     \end{tabular}
 \end{table}
 
-Someone can say it's pretty good. Our opinion that 12\% win on the signature size isn't very attractive. 
+Someone can say it's pretty good. Our opinion is that 12\% win on the signature size isn't very attractive, we want to reduce it at least by 20\%. Of course, in the cost of something else...
 
-\paragraph{Optimal Search Strategy} Every candidates can be related to the some tuple of metrics value. 
-The search for optimal candidate could be represented as finding the closest point to the origin in five dimentionl space (finding the shortest vector). 
-The issue is that we cannot visualize the such high dimentional space, but we can analyse the 2D projections of 5 dimentional space.
-We could create 10 graphs of every metrics pairs, but It is quite complicated to analyse.
-The better option is the strategy, were we define the metrics that are important to us, and the rest we cound use the default filter, by setting $X=1$. 
-And to find the best candidate, we serach for the point that the the closest to the origin.
+\subsubsection{Case 3: Adaptive Search} 
+The strategy is very simple:
+\begin{enumerate}
+    \item Determine what sacrifices you are willing to make for each parameter.
+    \item Find the best between all remaining candidates.
+\end{enumerate}
 
-Let's see the the visualized example below, where we chose signature size and signing cost as important metrics, while other must be better than the baseline.
+For (1) we can apply filters we introduced in Sec. 3.3. This section is dedicated to (2).
 
-\begin{figure}[htbp]
+We can define each candidate by a tuple of metrics value.  So, the search for optimal candidate could be represented as finding the closest point to the origin in five dimension space (similar to the finding the shortest vector, fortunately within very limited number of candidates), where each dimension represents a particular metric. That's almost it! 
+
+Let's assume we have only 2 metrics (signature size and signature generation cost) we care about. We want to keep the signature size $\leq$ SLH-DSA, and we are fine if the signature generation will take at most 2$\times$ from std.  In this case, indeed, we can allocate all candidates on 2-dimension space. All candidates are allocated in green square (what simplifies their brute-force). And definitely the best candidate is the closes point to (0,0).
+
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{content/images/scatter_plot.png}
+    \includegraphics[width=0.5\textwidth]{content/images/scatter_plot.png}
     \caption{Visualization of Candidates with Prioritization of Size and Signing Cost Metrics.}
     \label{fig:scatter_plot}
 \end{figure}
 
-While this interpretation of the parameters search fulfills its purpose to demonstrate how actually we find the candidates, this method needs more plots to know the exact values.
-We can do better! 
 
-In the new strategy, we plot unbounded parameters set (with only condition to have 128 bits security) on the plane randomly (the position doesn't matter). 
-After initializing candidates, apply the signature size filter, visualized as color filtering card. Moving further apply all other filter unil the last one.
-The resulting set is the set with appropriate candidates where we can search for the best. 
+We couldn't visualize 5-dimensional space, but we came with idea how to show it differently. 
+
+First of all we plot unbounded parameters set (with only condition to have 128 bits security) on the plane randomly (the position doesn't matter, each candidate is defined by unique set of parameters). After initializing candidates, we apply the signature size filter, visualized as color filtering card. Moving further apply all other filter unil the last one.
+
+The resulting set is the set with left candidates where we can search for the best. 
 
 Let's consider an example, where we set the following coefficients in the filters: 
 $$X_{\text{size}} = 0.85, X_{\text{kg}} = 1.5, X_{\text{sg}} = 2, X_{\text{sv}} = 0.8, X_{\text{cb}} = 1.$$
@@ -177,14 +181,14 @@ The result of search for candidates with filtering shown below (see the Figure~\
     \label{fig:full_filtering_process}
 \end{figure}
 
-Starting with the total number of candidates equal to 19437. After applying signature size filter, succesfully reduce the number of candidates up to 6202.
-In the next step, we reduce the candidates in more than 7 times. 
-Filtering further, we left with smaller and smaller number of suitable candidates, resulting only in final 60 candidates to check further. 
+Starting with the total number of candidates equal to 19437. After applying signature size filter, succesfully reduce the number of candidates up to 6202. In the next step, we reduce the candidates in more than 7 times. Filtering further, we left with smaller and smaller number of suitable candidates, resulting only in final 60 candidates to check further. 
 
 Obtaining the set of final candidates, we are ready to search for the best among them. 
-For this part we use weighted euclidean distance. 
-The reason behind choosing such metric lies in the ability to sign the priority of metrics.
-Let's define the raw weight coefficients as $w_{\text{size}}, w_{\text{kg}}, w_{\text{sg}}, w_{\text{sv}}$, and $w_{\text{cb}}$, representing the relative priority of signature size, key generation, signing, verification, and compression per byte, respectively. All coefficients are real positive numbers ($w \in \mathbb{R}^+$). 
+
+% add a formula for usual euclid distance
+
+\subsection{Decisional weights}
+We can do even better to apply the \emph{weighted} euclidean distance.  The reason behind choosing such metric lies in the ability to sign the priority of metrics. Let's define the raw weight coefficients as $w_{\text{size}}, w_{\text{kg}}, w_{\text{sg}}, w_{\text{sv}}$, and $w_{\text{cb}}$, representing the relative priority of signature size, key generation, signing, verification, and compression per byte, respectively. All coefficients are real positive numbers ($w \in \mathbb{R}^+$). 
 
 To ensure the calculation remains proportionally consistent regardless of the scale of the chosen weights, we normalize them into coefficients $p_i$ (where $i \in \{\text{size}, \text{kg}, \text{sg}, \text{sv}, \text{cb}\}$) such that their total sum equals $1$:
 \begin{equation}
@@ -200,9 +204,7 @@ Using these normalized coefficients, we calculate the Weighted Euclidean Distanc
 
 Note that we don't use raw metric values, but instead a ratio of raw metric to the standard. 
 
-To visualize the distances we set the points color takes from a color scale, where lower the distance, the color moves to the blue region.
-If the distance is higher it maps to the red color shade.
-For example, let's consider two cases where the weights are: 
+To visualize the distances we set the points color takes from a color scale, where lower the distance, the color moves to the blue region. If the distance is higher it maps to the red color shade. For example, let's consider two cases where the weights are: 
 \begin{itemize}
     \item Case 1: $w_{\text{size}} = w_{\text{kg}} = w_{\text{sg}} = w_{\text{sv}} = w_{\text{cb}} = 1$;
     \item Case 2: $w_{\text{size}}=5, w_{\text{kg}}=1, w_{\text{sg}}=1.5, w_{\text{sv}}=2$, and $w_{\text{cb}}=1$.
