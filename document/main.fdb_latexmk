@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1779360728.02203 "main.aux" "main.bbl" "main" 1779360732.79413 0
-  "./refs.bib" 1779360727.7853 1311 9bf2ed3f92cc666d8fb4995114160dcf ""
+["bibtex main"] 1779366623.1245 "main.aux" "main.bbl" "main" 1779366627.85513 0
+  "./refs.bib" 1779361735.52113 1311 9bf2ed3f92cc666d8fb4995114160dcf ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1779360732.58088 7738 9e74fe6b505ad8c99f06ffe8190d6af5 "pdflatex"
+  "main.aux" 1779366627.61385 7754 131ae87ccf5cdd35da67e98d24e5a014 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1779360728.15459 "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" "main.pdf" "main" 1779360732.79424 0
+["pdflatex"] 1779366623.20133 "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" "main.pdf" "main" 1779366627.85526 0
   "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" 1779355526.24274 1047 c4f1649ca2f4f635f44fb792468f48ff ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -194,7 +194,7 @@
   "/usr/local/texlive/2026/texmf.cnf" 1772409725 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "content/1-introduction.tex" 1779292664.51941 1856 512db5bb118c0b63407dc645a848f4a4 ""
   "content/2-parameters.tex" 1779353457.64591 4208 f2e7df1355fd998ddaa736ab0e5d6099 ""
-  "content/3-search.tex" 1779356795.06858 21788 3b31c30f476c159711f8ff788e5e3b68 ""
+  "content/3-search.tex" 1779366618.15314 22278 7cae966f2a5ba0ae6ea2e29a5262fd0c ""
   "content/images/concentric_diagram.png" 1779279499.38647 385123 abf4fcd276e06620cb0097aeff9797b7 ""
   "content/images/ideal_candidate_case_1.png" 1779355095.28013 111626 3ec447808b1d65d2775d2a52a1ed3852 ""
   "content/images/ideal_candidate_case_2.png" 1779354441.8128 108785 a14c5abb73743edb7f9acda1b5beeb36 ""
@@ -207,11 +207,11 @@
   "content/images/sieve_step6_rho.png" 1779279499.44679 180331 de42044963ed13c6a47ebda0bc7921cc ""
   "content/images/sieve_step7_distance_1.png" 1779279499.4482 197578 2d9ed024d27e58fed4dedd71d7a08278 ""
   "content/images/sieve_step7_distance_2.png" 1779279499.44965 209415 08e781bc405a8b962c5c195d8815720e ""
-  "main.aux" 1779360732.58088 7738 9e74fe6b505ad8c99f06ffe8190d6af5 "pdflatex"
-  "main.bbl" 1779360728.12475 980 c6e3864382e4a68369e03e80509074db "bibtex main"
-  "main.out" 1779360732.58159 1993 38da8ed21e9adb4d589889456bf4011e "pdflatex"
+  "main.aux" 1779366627.61385 7754 131ae87ccf5cdd35da67e98d24e5a014 "pdflatex"
+  "main.bbl" 1779366623.19889 980 c6e3864382e4a68369e03e80509074db "bibtex main"
+  "main.out" 1779366627.61462 1994 29b338134475350ad248b705fe82aa42 "pdflatex"
   "main.tex" 1779355526.24274 1047 c4f1649ca2f4f635f44fb792468f48ff ""
-  "main.toc" 1779360732.5818 1333 7a1d5c42f825cec5b2d985bb69bcf68a "pdflatex"
+  "main.toc" 1779366627.61476 1326 d0ff15dcc442ede9e30b30344f3c3ed4 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
