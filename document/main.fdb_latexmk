@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1779366623.1245 "main.aux" "main.bbl" "main" 1779366627.85513 0
+["bibtex main"] 1779732174.26438 "main.aux" "main.bbl" "main" 1779733852.03725 0
   "./refs.bib" 1779361735.52113 1311 9bf2ed3f92cc666d8fb4995114160dcf ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1779366627.61385 7754 131ae87ccf5cdd35da67e98d24e5a014 "pdflatex"
+  "main.aux" 1779733851.80481 9613 4a2dc2a70501d828d3eabff1c17dd661 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1779366623.20133 "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" "main.pdf" "main" 1779366627.85526 0
+["pdflatex"] 1779733846.96832 "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" "main.pdf" "main" 1779733852.03734 0
   "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" 1779355526.24274 1047 c4f1649ca2f4f635f44fb792468f48ff ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -23,6 +23,10 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1246382020 940 228d6584342e91276bf566bcf9716b83 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm" 1136768653 1332 f817c21a1ba54560425663374f1b651a ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx6.tfm" 1136768653 1344 8a0be4fe4d376203000810ad4dc81558 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm" 1136768653 1336 3125ccb448c1a09074e3aa4a9832f130 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmbx8.tfm" 1136768653 1332 1fde11373e221473104d6cc5993f046e ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmex10.tfm" 1136768653 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm" 1136768653 1528 abec98dbc43e172678c11b3b9031252a ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -194,10 +198,12 @@
   "/usr/local/texlive/2026/texmf.cnf" 1772409725 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "content/1-introduction.tex" 1779292664.51941 1856 512db5bb118c0b63407dc645a848f4a4 ""
   "content/2-parameters.tex" 1779353457.64591 4208 f2e7df1355fd998ddaa736ab0e5d6099 ""
-  "content/3-search.tex" 1779366618.15314 22278 7cae966f2a5ba0ae6ea2e29a5262fd0c ""
+  "content/3-search.tex" 1779733846.71356 27861 066f1fdabc66ea967d2cb82166906d31 ""
+  "content/images/comparison_normalized.png" 1779727931.0326 118114 4baca1677b0aea7a2c38f3cbec33c5e3 ""
+  "content/images/comparison_regular.png" 1779730353.39991 117818 3d379b63032655d4099472d003a29b49 ""
   "content/images/concentric_diagram.png" 1779279499.38647 385123 abf4fcd276e06620cb0097aeff9797b7 ""
-  "content/images/ideal_candidate_case_1.png" 1779355095.28013 111626 3ec447808b1d65d2775d2a52a1ed3852 ""
-  "content/images/ideal_candidate_case_2.png" 1779354441.8128 108785 a14c5abb73743edb7f9acda1b5beeb36 ""
+  "content/images/ideal_candidate_case_1.png" 1779731293.47823 492436 1b9783ca59b24f05ffb59e7230cea844 ""
+  "content/images/ideal_candidate_case_2_.png" 1779354441.8128 108785 a14c5abb73743edb7f9acda1b5beeb36 ""
   "content/images/scatter_plot.png" 1779279499.38886 380680 bcd5c09304a9e850f38f543db001500c ""
   "content/images/sieve_step1_initial.png" 1779279499.41877 6656638 978d6e5341140191821fee1f04e58b5b ""
   "content/images/sieve_step2_size.png" 1779279499.43597 2998779 10c87a3128f9243f32e63873de05200e ""
@@ -207,11 +213,11 @@
   "content/images/sieve_step6_rho.png" 1779279499.44679 180331 de42044963ed13c6a47ebda0bc7921cc ""
   "content/images/sieve_step7_distance_1.png" 1779279499.4482 197578 2d9ed024d27e58fed4dedd71d7a08278 ""
   "content/images/sieve_step7_distance_2.png" 1779279499.44965 209415 08e781bc405a8b962c5c195d8815720e ""
-  "main.aux" 1779366627.61385 7754 131ae87ccf5cdd35da67e98d24e5a014 "pdflatex"
-  "main.bbl" 1779366623.19889 980 c6e3864382e4a68369e03e80509074db "bibtex main"
-  "main.out" 1779366627.61462 1994 29b338134475350ad248b705fe82aa42 "pdflatex"
+  "main.aux" 1779733851.80481 9613 4a2dc2a70501d828d3eabff1c17dd661 "pdflatex"
+  "main.bbl" 1779732174.3408 980 c6e3864382e4a68369e03e80509074db "bibtex main"
+  "main.out" 1779733851.80566 2233 89792d34cafcffc309aeaffa22e8a060 "pdflatex"
   "main.tex" 1779355526.24274 1047 c4f1649ca2f4f635f44fb792468f48ff ""
-  "main.toc" 1779366627.61476 1326 d0ff15dcc442ede9e30b30344f3c3ed4 "pdflatex"
+  "main.toc" 1779733851.80585 1479 cc7d26bcd6ef720eb644ce7b2bfb2387 "pdflatex"
   (generated)
   "main.aux"
   "main.log"

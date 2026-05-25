@@ -13,4 +13,6 @@
 \contentsline {subsubsection}{\numberline {3.3.2}Case 2: Balanced Metrics}{4}{subsubsection.3.3.2}%
 \contentsline {subsubsection}{\numberline {3.3.3}Case 3: Adaptive Search}{4}{subsubsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.4}Decisional Weights}{7}{subsection.3.4}%
-\contentsline {section}{\numberline {4}Recommended Candidate Tuple}{9}{section.4}%
+\contentsline {subsection}{\numberline {3.5}Metric-Normalized Weighted Distance}{9}{subsection.3.5}%
+\contentsline {paragraph}{Note:}{10}{section*.14}%
+\contentsline {section}{\numberline {4}Recommended Candidate Tuple}{11}{section.4}%
