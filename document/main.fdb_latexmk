@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1779990913.86894 "main.aux" "main.bbl" "main" 1779999767.80718 0
+["bibtex main"] 1779990913.86894 "main.aux" "main.bbl" "main" 1780046208.6982 0
   "./refs.bib" 1779361735.52113 1311 9bf2ed3f92cc666d8fb4995114160dcf ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1779999767.58229 9717 66416977fd0a383c6c173569f28a89ff "pdflatex"
+  "main.aux" 1780046208.47915 9717 66416977fd0a383c6c173569f28a89ff "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1779999762.36731 "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" "main.pdf" "main" 1779999767.80729 0
-  "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" 1779355526.24274 1047 c4f1649ca2f4f635f44fb792468f48ff ""
+["pdflatex"] 1780046203.28492 "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" "main.pdf" "main" 1780046208.69831 0
+  "/Users/curious.vi/dl_work/shrincs_all/SPHINCS-Parameters/document/main.tex" 1780045171.90598 709 5b4e8ed38f265dbecabb0252b28a0f39 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm" 1136768653 1536 02c06700a42be0f5a28664c7273f82e7 ""
@@ -196,9 +196,9 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1773238535 5541377 04880c840ca220163a28f1a3af0ee662 ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1773238452 3636764 1be46cdfb50add770b4c926062d1b902 ""
   "/usr/local/texlive/2026/texmf.cnf" 1772409725 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "content/1-introduction.tex" 1779292664.51941 1856 512db5bb118c0b63407dc645a848f4a4 ""
+  "content/1-introduction.tex" 1780045135.8891 1880 4c2cf334719a918459de113e6422f4d8 ""
   "content/2-parameters.tex" 1779353457.64591 4208 f2e7df1355fd998ddaa736ab0e5d6099 ""
-  "content/3-search.tex" 1779999762.09579 28330 a42c8b473ff1e70144da18108c15b47d ""
+  "content/3-search.tex" 1780046203.02584 28323 d106e446ec7a1b34109f89153df3f0de ""
   "content/images/comparison_normalized.png" 1779998342.98798 503247 848f3ff538cdd2a7a6fc9930a98994cf ""
   "content/images/comparison_regular.png" 1779999037.05055 501576 49ad0cc3077cb526f54705551469b935 ""
   "content/images/concentric_diagram.png" 1779995835.2055 382814 eb596ca358263c60aca72b8dea99569d ""
@@ -213,11 +213,11 @@
   "content/images/sieve_step6_rho.png" 1779279499.44679 180331 de42044963ed13c6a47ebda0bc7921cc ""
   "content/images/sieve_step7_distance_1.png" 1779279499.4482 197578 2d9ed024d27e58fed4dedd71d7a08278 ""
   "content/images/sieve_step7_distance_2.png" 1779279499.44965 209415 08e781bc405a8b962c5c195d8815720e ""
-  "main.aux" 1779999767.58229 9717 66416977fd0a383c6c173569f28a89ff "pdflatex"
+  "main.aux" 1780046208.47915 9717 66416977fd0a383c6c173569f28a89ff "pdflatex"
   "main.bbl" 1779990913.94543 980 c6e3864382e4a68369e03e80509074db "bibtex main"
-  "main.out" 1779999767.58302 2233 89792d34cafcffc309aeaffa22e8a060 "pdflatex"
-  "main.tex" 1779355526.24274 1047 c4f1649ca2f4f635f44fb792468f48ff ""
-  "main.toc" 1779999767.58318 1528 0078092c2ddb2cabad364a57d5684333 "pdflatex"
+  "main.out" 1780046208.48003 2233 89792d34cafcffc309aeaffa22e8a060 "pdflatex"
+  "main.tex" 1780045171.90598 709 5b4e8ed38f265dbecabb0252b28a0f39 ""
+  "main.toc" 1780046208.48021 1528 0078092c2ddb2cabad364a57d5684333 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
