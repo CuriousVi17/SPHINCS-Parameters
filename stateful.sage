@@ -1,4 +1,3 @@
-#!/usr/bin/env sage
 """
 Stateful hash-based signature scheme search: XMSS, XMSS-MT, and SHRINCS/UXMSS.
 
@@ -57,9 +56,6 @@ Usage:
 import os, sys, csv as _csv
 from math import log, ceil
 
-# =============================================================================
-# Load costs.sage (suppress its auto-CSV output)
-# =============================================================================
 
 _saved_argv = sys.argv
 sys.argv = ['stateful.sage']
@@ -67,9 +63,6 @@ _dir = os.path.dirname(os.path.abspath(__file__))
 load(os.path.join(_dir, "costs.sage"))
 sys.argv = _saved_argv
 
-# =============================================================================
-# CLI Parsing
-# =============================================================================
 
 def _parse_args(argv):
     do_csv = xmss_only = xmssmt_only = uxmss_only = show_detail = False
@@ -98,10 +91,6 @@ def _parse_args(argv):
 (DO_CSV, XMSS_ONLY, XMSSMT_ONLY,
  UXMSS_ONLY, SHOW_DETAIL,
  OUTPUT_FILE, REF_OVERRIDES) = _parse_args(sys.argv)
-
-# =============================================================================
-# Constants
-# =============================================================================
 
 N          = hashbytes       # 16 bytes = 128-bit hash output
 C_SIZE     = counter_size    # 4 bytes (WOTS+C grinding counter)
@@ -132,9 +121,6 @@ def get_d_vals(h):
     """Return XMSS-MT layer counts to sweep for a given total height h."""
     return [d for d in range(2, h + 1) if h % d == 0]
 
-# =============================================================================
-# OTS Helpers
-# =============================================================================
 
 def ots_label(ots_type, w, swn):
     if ots_type == OTS_WC:      return "WOTS+C(w={:3d},S={:4d})".format(w, swn)
@@ -159,92 +145,87 @@ def wots_Thl(l, ots_type):
 
 
 def wots_pk_C(w, ots_type):
-    """Compressions for one WOTS public key computation."""
     l   = wots_l(w, ots_type)
     Thl = wots_Thl(l, ots_type)
     return l * C_PRF + l * (w - 1) * C_Th1 + Thl
 
 
 def wots_sign_C(w, swn, ots_type):
-    """Compressions for one WOTS signing (excluding msg hash and auth path)."""
     l   = wots_l(w, ots_type)
     if ots_type == OTS_WC:
         Thl    = wots_Thl(l, ots_type)
         nu     = compute_nu(l, swn, w)
         search = int(ceil(F(w)**l / F(nu)))
         return search * C_Th1c + l * C_PRF + swn * C_Th1 + Thl
-    # Standard WOTS does not compress chains into a PK during signing
     return l * C_PRF + l * (w - 1) // 2 * C_Th1
 
 
-def wots_verify_C(w, swn, ots_type):
-    """Compressions for WOTS verification (excluding msg hash and auth path)."""
+def wots_verify_worst_steps(w, ots_type):
+    l1 = N * 8 // int(log(w, 2))
+    l2 = int(ceil(log(l1 * (w - 1), 2) / log(w, 2)))
+    C = l1 * (w - 1)
+    ds = 0
+    rem = C
+    while rem > 0:
+        ds += rem % w
+        rem = rem // w
+    return l1 * (w - 1) + l2 * (w - 1) - ds
+
+
+def wots_verify_C(w, swn, ots_type, worst_case=False):
     l   = wots_l(w, ots_type)
     Thl = wots_Thl(l, ots_type)
+    
     if ots_type == OTS_WC:
         return ((w - 1) * l - swn) * C_Th1 + C_Th1c + Thl
+    
+    if worst_case:
+        steps = wots_verify_worst_steps(w, ots_type)
+        return steps * C_Th1 + Thl
+        
     return l * (w - 1) // 2 * C_Th1 + Thl
 
-# =============================================================================
-# Shared tree-level cost functions
-# =============================================================================
-
 def tree_size_per_layer(h_prime, w, ots_type):
-    """Bytes contributed by one XMSS layer to the hypertree signature."""
     l   = wots_l(w, ots_type)
     ctr = C_SIZE if ots_type == OTS_WC else 0
     return h_prime * N + l * N + ctr
 
 
 def tree_keygen_C(h_prime, w, ots_type):
-    """Compressions to build one balanced XMSS tree of height h_prime."""
     pk = wots_pk_C(w, ots_type)
     sz = F(2)**h_prime
     return sz * pk + (sz - 1) * C_Th2
 
 
 def tree_sign_amortised_C(h_prime, w, swn, ots_type):
-    """
-    Amortised signing with BDS: h' WOTS PK computations + WOTS sign + msg hash.
-    BDS maintains the auth path by computing one WOTS PK per tree level per sig.
-    """
     pk   = wots_pk_C(w, ots_type)
     c_sg = wots_sign_C(w, swn, ots_type)
     return C_Hmsg + C_PRFmsg + c_sg + h_prime * pk + h_prime * C_Th2
 
 
-def tree_verify_C(h_prime, w, swn, ots_type):
-    """Compressions to verify one XMSS layer: WOTS verify + h' Th2 hashes."""
-    return wots_verify_C(w, swn, ots_type) + h_prime * C_Th2
+def tree_verify_C(h_prime, w, swn, ots_type, worst_case=False):
+    return wots_verify_C(w, swn, ots_type, worst_case) + h_prime * C_Th2
 
-# =============================================================================
-# 1. XMSS: Single-layer balanced tree, height h
-# =============================================================================
 
 def xmss_size_h(h, w, ots_type):
-    """XMSS signature size in bytes (auth path = h nodes, fixed)."""
     l   = wots_l(w, ots_type)
     ctr = C_SIZE if ots_type == OTS_WC else 0
     return R_SIZE + ctr + l * N + h * N + IDX_SIZE
 
 
 def xmss_keygen_C_h(h, w, ots_type):
-    """Compressions to build 2^h-leaf balanced tree (infeasible for h=40)."""
     return float(tree_keygen_C(h, w, ots_type))
 
 
 def xmss_sign_C_h(h, w, swn, ots_type):
-    """Amortised signing compressions (BDS auth-path maintenance)."""
     return float(tree_sign_amortised_C(h, w, swn, ots_type))
 
 
-def xmss_verify_C_h(h, w, swn, ots_type):
-    """Verification compressions: msg hash + WOTS verify + h Th2 hashes."""
-    return float(C_Hmsg + tree_verify_C(h, w, swn, ots_type))
+def xmss_verify_C_h(h, w, swn, ots_type, worst_case=False):
+    return float(C_Hmsg + tree_verify_C(h, w, swn, ots_type, worst_case))
 
 
 def compute_xmss_rows(h):
-    """Return XMSS rows for all OTS/w combinations at height h."""
     rows = []
     for ots_type, w, swn in PARAM_SETS:
         rows.append(dict(
@@ -257,28 +238,23 @@ def compute_xmss_rows(h):
             keygen_C = xmss_keygen_C_h(h, w, ots_type),
             sign_C   = xmss_sign_C_h(h, w, swn, ots_type),
             sign_cold_C = float("nan"),
-            verify_C = xmss_verify_C_h(h, w, swn, ots_type),
+            verify_avg_C   = xmss_verify_C_h(h, w, swn, ots_type, worst_case=False),
+            verify_worst_C = xmss_verify_C_h(h, w, swn, ots_type, worst_case=True),
         ))
     return rows
 
-# =============================================================================
-# 2. XMSS-MT: Multi-tree hypertree, total height h, d layers of height h'
-# =============================================================================
 
 def xmssmt_size_h(h, d, w, ots_type):
-    """XMSS-MT signature size in bytes: R + d * layer-sig (no FORS needed)."""
     h_prime = h // d
     return R_SIZE + d * tree_size_per_layer(h_prime, w, ots_type) + IDX_SIZE
 
 
 def xmssmt_keygen_C_h(h, d, w, ots_type):
-    """Keygen: build only the top-layer tree (height h' = h/d)."""
     h_prime = h // d
     return float(tree_keygen_C(h_prime, w, ots_type))
 
 
 def xmssmt_sign_cold_C_h(h, d, w, swn, ots_type):
-    """Cold signing: rebuild d trees of height h' per signature (upper bound)."""
     h_prime = h // d
     return float(C_Hmsg + C_PRFmsg +
                  d * (float(tree_keygen_C(h_prime, w, ots_type)) +
@@ -286,24 +262,19 @@ def xmssmt_sign_cold_C_h(h, d, w, swn, ots_type):
 
 
 def xmssmt_sign_bds_C_h(h, d, w, swn, ots_type):
-    """Amortised signing with BDS: d layers, each contributing h' WOTS PK evals."""
     h_prime = h // d
     pk      = wots_pk_C(w, ots_type)
     c_sg    = wots_sign_C(w, swn, ots_type)
     
-    # WOTS signing: only layer 0 is fresh every sig; upper layers are heavily cached
-    # BDS advances all d TREEHASH uniformly: d * h' pk + d * h' Th2
     return float(C_Hmsg + C_PRFmsg + c_sg + d * (h_prime * pk + h_prime * C_Th2))
 
 
-def xmssmt_verify_C_h(h, d, w, swn, ots_type):
-    """Verification: msg hash + d XMSS layer verifications."""
+def xmssmt_verify_C_h(h, d, w, swn, ots_type, worst_case=False):
     h_prime = h // d
-    return float(C_Hmsg + d * tree_verify_C(h_prime, w, swn, ots_type))
+    return float(C_Hmsg + d * tree_verify_C(h_prime, w, swn, ots_type, worst_case))
 
 
 def compute_xmssmt_rows(h):
-    """Return XMSS-MT rows for all OTS/w/d combinations at total height h."""
     rows = []
     for ots_type, w, swn in PARAM_SETS:
         for d in get_d_vals(h):
@@ -318,19 +289,15 @@ def compute_xmssmt_rows(h):
                 keygen_C = xmssmt_keygen_C_h(h, d, w, ots_type),
                 sign_C   = xmssmt_sign_bds_C_h(h, d, w, swn, ots_type),
                 sign_cold_C = xmssmt_sign_cold_C_h(h, d, w, swn, ots_type),
-                verify_C = xmssmt_verify_C_h(h, d, w, swn, ots_type),
+                verify_avg_C   = xmssmt_verify_C_h(h, d, w, swn, ots_type, worst_case=False),
+                verify_worst_C = xmssmt_verify_C_h(h, d, w, swn, ots_type, worst_case=True),
             ))
     return rows
 
-# =============================================================================
-# 3. SHRINCS/UXMSS: Right-skewed unbalanced tree
-# =============================================================================
+def find_reference_spx(q_s_log2, w=16):
+    return dict(h=45, d=5, k=8, a=16, w=16, size=5712, security=128.0)
 
 def find_max_hsf(w, ots_type, target_size):
-    """
-    Largest hsf s.t. max UXMSS signature (at q=hsf) < target_size (strict).
-    Constraint: R_SIZE + [C_SIZE] + l*N + hsf*N + IDX_SIZE < target_size
-    """
     l     = wots_l(w, ots_type)
     ctr   = C_SIZE if ots_type == OTS_WC else 0
     avail = target_size - 1 - R_SIZE - ctr - l * N - IDX_SIZE
@@ -338,29 +305,24 @@ def find_max_hsf(w, ots_type, target_size):
 
 
 def uxmss_size(q, hsf, w, ots_type):
-    """Size of q-th UXMSS signature (bytes)."""
     l   = wots_l(w, ots_type)
     ctr = C_SIZE if ots_type == OTS_WC else 0
     return R_SIZE + ctr + l * N + min(q, hsf) * N + IDX_SIZE
 
 
 def uxmss_keygen_C(hsf, w, ots_type):
-    """Keygen: (hsf+1) WOTS PK computations + hsf Th2 nodes (linear in hsf)."""
     return float((hsf + 1) * wots_pk_C(w, ots_type) + hsf * C_Th2)
 
 
 def uxmss_sign_C(q, hsf, w, swn, ots_type):
-    """Amortised signing (auth path cached): msg hash + WOTS sign."""
     return float(C_Hmsg + C_PRFmsg + wots_sign_C(w, swn, ots_type))
 
 
-def uxmss_verify_C(q, hsf, w, swn, ots_type):
-    """Verification: msg hash + WOTS verify + min(q,hsf) Th2 hashes."""
-    return float(C_Hmsg + wots_verify_C(w, swn, ots_type) + min(q, hsf) * C_Th2)
+def uxmss_verify_C(q, hsf, w, swn, ots_type, worst_case=False):
+    return float(C_Hmsg + wots_verify_C(w, swn, ots_type, worst_case) + min(q, hsf) * C_Th2)
 
 
 def compute_uxmss_rows(target_size, q_s_log2):
-    """Return UXMSS rows for all OTS/w combinations given a reference size."""
     rows = []
     for ots_type, w, swn in PARAM_SETS:
         hsf  = find_max_hsf(w, ots_type, target_size)
@@ -377,22 +339,20 @@ def compute_uxmss_rows(target_size, q_s_log2):
             sz_max       = uxmss_size(hsf, hsf, w, ots_type),
             keygen_C     = uxmss_keygen_C(hsf, w, ots_type),
             sign_q1_C    = uxmss_sign_C(1,   hsf, w, swn, ots_type),
-            verify_max_C = uxmss_verify_C(hsf, hsf, w, swn, ots_type),
+            verify_max_avg_C   = uxmss_verify_C(hsf, hsf, w, swn, ots_type, worst_case=False),
+            verify_max_worst_C = uxmss_verify_C(hsf, hsf, w, swn, ots_type, worst_case=True),
         ))
     return rows
 
-# =============================================================================
-# CSV writing
-# =============================================================================
 
 # Unified CSV header covering all three schemes
 _CSV_HEADER = [
     "scheme", "q_s_log2", "h_total", "d", "h_prime",
     "ots_type", "w", "swn", "l",
     "size_bytes",
-    "keygen_C", "sign_bds_C", "sign_cold_C", "verify_C",
+    "keygen_C", "sign_bds_C", "sign_cold_C", "verify_avg_C", "verify_worst_C",
     "ref_size", "hsf", "num_sigs",
-    "sz_q1", "sz_max", "sign_q1_C", "verify_max_C",
+    "sz_q1", "sz_max", "sign_q1_C", "verify_max_avg_C", "verify_max_worst_C",
 ]
 
 
@@ -409,8 +369,8 @@ def _xmss_csv_row(r):
             r['ots_type'], r['w'], r['swn'], r['l'],
             r['size'],
             _fmt_f(r['keygen_C']), _fmt_f(r['sign_C']),
-            _fmt_f(r['sign_cold_C']), _fmt_f(r['verify_C']),
-            "", "", "", "", "", "", ""]
+            _fmt_f(r['sign_cold_C']), _fmt_f(r['verify_avg_C']), _fmt_f(r['verify_worst_C']),
+            "", "", "", "", "", "", "", ""]
 
 
 def _xmssmt_csv_row(r):
@@ -418,18 +378,18 @@ def _xmssmt_csv_row(r):
             r['ots_type'], r['w'], r['swn'], r['l'],
             r['size'],
             _fmt_f(r['keygen_C']), _fmt_f(r['sign_C']),
-            _fmt_f(r['sign_cold_C']), _fmt_f(r['verify_C']),
-            "", "", "", "", "", "", ""]
+            _fmt_f(r['sign_cold_C']), _fmt_f(r['verify_avg_C']), _fmt_f(r['verify_worst_C']),
+            "", "", "", "", "", "", "", ""]
 
 
 def _uxmss_csv_row(r):
     return [r['scheme'], r['q_s_log2'], "", "", "",
             r['ots_type'], r['w'], r['swn'], r['l'],
             "",
-            _fmt_f(r['keygen_C']), "", "", _fmt_f(r['verify_max_C']),
+            _fmt_f(r['keygen_C']), "", "", "", "",
             r['ref_size'], r['hsf'], r['nsig'],
             r['sz_q1'], r['sz_max'],
-            _fmt_f(r['sign_q1_C']), _fmt_f(r['verify_max_C'])]
+            _fmt_f(r['sign_q1_C']), _fmt_f(r['verify_max_avg_C']), _fmt_f(r['verify_max_worst_C'])]
 
 
 def write_csv(dest, xmss_by_h, xmssmt_by_h, uxmss_by_h):
@@ -458,9 +418,6 @@ def save_csv_file(path, xmss_by_h, xmssmt_by_h, uxmss_by_h):
         n = write_csv(f, xmss_by_h, xmssmt_by_h, uxmss_by_h)
     print("Saved {} data rows to {!r}".format(n, path), file=sys.stderr)
 
-# =============================================================================
-# Formatting helpers
-# =============================================================================
 
 def fmt_c(n):
     """Format a compression count with K/M/G/T suffixes."""
@@ -488,14 +445,11 @@ def _hdr(cols):
 def _sep_line(cols, char="-"):
     return char * (sum(c[1] for c in cols) + len(cols) - 1)
 
-# =============================================================================
-# Print: XMSS
-# =============================================================================
 
 def print_xmss_table(rows_by_h):
     cols = [("q_s", 4, ">"), ("OTS Variant", 26, "<"), ("l", 3, ">"),
-            ("Size(B)", 7, ">"), ("Keygen(C)", 13, ">"),
-            ("Sign-BDS(C)", 11, ">"), ("Verify(C)", 10, ">")]
+            ("Size(B)", 7, ">"), ("Keygen(C)", 11, ">"),
+            ("Sign-BDS(C)", 11, ">"), ("Vfy-avg(C)", 10, ">"), ("Vfy-wrst(C)", 11, ">")]
     W = sum(c[1] for c in cols) + len(cols) - 1
     print()
     print("="*W)
@@ -509,22 +463,20 @@ def print_xmss_table(rows_by_h):
             infeas = r['keygen_C'] > 1e11
             kg = fmt_c(r['keygen_C']) + ("*" if infeas else " ")
             print(_row(["2^{}".format(h), r['label'], r['l'], r['size'],
-                        kg, fmt_c(r['sign_C']), fmt_c(r['verify_C'])], cols))
+                        kg, fmt_c(r['sign_C']), 
+                        fmt_c(r['verify_avg_C']), fmt_c(r['verify_worst_C'])], cols))
         print()
     print(_sep_line(cols))
     print("* Keygen for h=40 requires 2^40 ≈ 1.1·10^12 WOTS keypairs — infeasible.")
     print("  h=20 keygen ≈ 2^20 ≈ 1M WOTS keys — feasible (~seconds on modern CPU).")
     print()
 
-# =============================================================================
-# Print: XMSS-MT
-# =============================================================================
 
 def print_xmssmt_table(rows_by_h):
     cols = [("q_s", 4, ">"), ("OTS Variant", 26, "<"), ("d", 2, ">"),
             ("h'", 3, ">"), ("l", 3, ">"), ("Size(B)", 7, ">"),
-            ("Keygen(C)", 11, ">"), ("Sign-BDS(C)", 11, ">"),
-            ("Sign-cold(C)", 12, ">"), ("Verify(C)", 10, ">")]
+            ("Keygen(C)", 10, ">"), ("Sign-BDS(C)", 11, ">"),
+            ("Sign-cold(C)", 12, ">"), ("Vfy-avg(C)", 10, ">"), ("Vfy-wrst(C)", 11, ">")]
     W = sum(c[1] for c in cols) + len(cols) - 1
     print()
     print("="*W)
@@ -543,22 +495,20 @@ def print_xmssmt_table(rows_by_h):
                     print()
                 cur_label = new_label
             print(_row([tag, r['label'], r['d'], r['h_prime'], r['l'], r['size'],
-                        fmt_c(r['keygen_C']), fmt_c(r['sign_C']),
-                        fmt_c(r['sign_cold_C']), fmt_c(r['verify_C'])], cols))
+                        fmt_c(r['keygen_C']), fmt_c(r['sign_C']), fmt_c(r['sign_cold_C']), 
+                        fmt_c(r['verify_avg_C']), fmt_c(r['verify_worst_C'])], cols))
     print()
     print(_sep_line(cols))
     print("Sign-cold: rebuild d trees per sig (worst-case). BDS: amortised O(d·h') PK evals.")
     print()
 
-# =============================================================================
-# Print: UXMSS
-# =============================================================================
 
 def print_uxmss_table(rows_by_h, refs):
     cols = [("OTS Variant", 26, "<"), ("l", 3, ">"),
             ("Ref(B)", 6, ">"), ("hsf", 5, ">"), ("Sigs", 7, ">"),
             ("Sz(q=1)", 8, ">"), ("Sz(max)", 8, ">"),
-            ("Keygen(C)", 10, ">"), ("Sign(q=1)", 9, ">"), ("Vfy(max)", 9, ">")]
+            ("Keygen(C)", 10, ">"), ("Sign(q=1)", 9, ">"), 
+            ("VfyAvg(mx)", 10, ">"), ("VfyWrst(mx)", 11, ">")]
     W = sum(c[1] for c in cols) + len(cols) - 1
     print()
     print("="*W)
@@ -574,16 +524,13 @@ def print_uxmss_table(rows_by_h, refs):
             print(_row([r['label'], r['l'], ref_size,
                         r['hsf'], r['nsig'], r['sz_q1'], r['sz_max'],
                         fmt_c(r['keygen_C']), fmt_c(r['sign_q1_C']),
-                        fmt_c(r['verify_max_C'])], cols))
+                        fmt_c(r['verify_max_avg_C']), fmt_c(r['verify_max_worst_C'])], cols))
         print()
     print(_sep_line(cols))
     print("Ref: SPX reference computed per target (see footer for parameters).")
     print("hsf = max auth-path nodes; Sigs = hsf+1; Sz(max) must be < Ref.")
     print()
 
-# =============================================================================
-# Print: UXMSS detail (per-q progression)
-# =============================================================================
 
 def print_uxmss_detail(uxmss_by_h):
     for h in UXMSS_H_VALS:
@@ -594,49 +541,41 @@ def print_uxmss_detail(uxmss_by_h):
             if hsf <= 0: continue
             print("\n  {} (l={}, hsf={}, {} sigs)".format(
                 r['label'], r['l'], hsf, hsf + 1))
-            print("  {:>6}  {:>8}  {:>12}  {:>12}".format(
-                "q", "Size(B)", "Sign(C)", "Verify(C)"))
-            print("  " + "-" * 42)
+            print("  {:>6}  {:>8}  {:>12}  {:>12}  {:>12}".format(
+                "q", "Size(B)", "Sign(C)", "Vfy-avg(C)", "Vfy-wrst(C)"))
+            print("  " + "-" * 56)
             qpts = sorted(set(filter(lambda q: 1 <= q <= hsf + 1,
                  [1, 2, 5, 10, hsf // 4, hsf // 2, 3 * hsf // 4,
                  max(1, hsf - 1), hsf, hsf + 1])))
             for q in qpts:
                 sz = uxmss_size(q, hsf, w, ots_type)
                 sc = uxmss_sign_C(q, hsf, w, swn, ots_type)
-                vc = uxmss_verify_C(q, hsf, w, swn, ots_type)
+                vc_avg = uxmss_verify_C(q, hsf, w, swn, ots_type, worst_case=False)
+                vc_wrst = uxmss_verify_C(q, hsf, w, swn, ots_type, worst_case=True)
                 flag = " ← max" if q == hsf else (" ← last" if q == hsf + 1 else "")
-                print("  {:>6}  {:>8}  {:>12}  {:>12}{}".format(
-                    q, sz, fmt_c(sc), fmt_c(vc), flag))
+                print("  {:>6}  {:>8}  {:>12}  {:>12}  {:>12}{}".format(
+                    q, sz, fmt_c(sc), fmt_c(vc_avg), fmt_c(vc_wrst), flag))
     print()
 
-# =============================================================================
-# Main
-# =============================================================================
 
 if __name__ == "__main__":
-
-    # ---- Compute SPX references for UXMSS target ----
     refs = {}
     for h in UXMSS_H_VALS:
         print("Applying Candidate 2 as hardcoded reference (5,712 B) for target 2^{}.".format(h),
               file=sys.stderr)
         refs[h] = dict(h=45, d=5, k=8, a=16, w=16, size=5712, security=128.0)
 
-    # ---- Compute all rows ----
     xmss_by_h   = {h: compute_xmss_rows(h)             for h in H_VALS}
     xmssmt_by_h = {h: compute_xmssmt_rows(h)             for h in H_VALS}
     uxmss_by_h  = {h: compute_uxmss_rows(refs[h]['size'] if refs[h] else 9999, h)
                    for h in UXMSS_H_VALS}
 
-    # ---- CSV output ----
     if DO_CSV:
         write_csv(sys.stdout, xmss_by_h, xmssmt_by_h, uxmss_by_h)
 
-    # ---- File output ----
     if OUTPUT_FILE:
         save_csv_file(OUTPUT_FILE, xmss_by_h, xmssmt_by_h, uxmss_by_h)
 
-    # ---- Table output (unless --csv-only) ----
     if not DO_CSV:
         if not XMSSMT_ONLY and not UXMSS_ONLY:
             print_xmss_table(xmss_by_h)
@@ -647,7 +586,6 @@ if __name__ == "__main__":
         if SHOW_DETAIL and not XMSS_ONLY and not XMSSMT_ONLY:
             print_uxmss_detail(uxmss_by_h)
 
-        # ---- Footer ----
         print("=" * 72)
         print(" Reference configurations ".center(72, "="))
         print("=" * 72)
