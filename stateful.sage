@@ -35,8 +35,12 @@ OTS variants:
 
 w values: 16, 32, 256.
   w= 16: l1=32  WOTS-TW/classic l=35  WOTS+C S_wn=240
-  w= 32: l1=25  WOTS-TW/classic l=27  WOTS+C S_wn=387
+  w= 32: l1=26  WOTS-TW/classic l=28  WOTS+C S_wn=403
   w=256: l1=16  WOTS-TW/classic l=18  WOTS+C S_wn=2040
+
+  Note: l1 = ceil(8n / log2(w)) per FIPS 205. For w=16 and w=256 the
+  division is exact; for w=32 we need 26 chains (not 25) to cover the
+  full 128-bit message digest.
 
 SHA-256 compression model (same convention as costs.sage):
   C_Th1=1  C_Th2=2  C_PRF=1  C_Th1c=1  C_Hmsg=2  C_PRFmsg=2
@@ -94,9 +98,17 @@ def _parse_args(argv):
 
 N          = hashbytes       # 16 bytes = 128-bit hash output
 C_SIZE     = counter_size    # 4 bytes (WOTS+C grinding counter)
-R_SIZE     = randomness_size # 16 bytes (message randomness)
-IDX_SIZE   = 4               # 4 bytes (leaf index field for signatures)
+R_SIZE     = randomness_size # 32 bytes (message randomness, from costs.sage)
 TARGET_SEC = 128             # Minimum security level (bits)
+
+
+def idx_bytes(h):
+    """Minimum bytes required to encode a leaf index in a tree of total height h.
+
+    h=20 → 3 B (covers 2^20 leaves), h=40 → 5 B (covers 2^40 leaves).
+    A hardcoded 4-byte field would under-size signatures for h>32.
+    """
+    return max(1, int(ceil(h / 8)))
 
 # Targets
 H_VALS       = [20, 40]      # h=20 -> 2^20 sigs, h=40 -> 2^40 sigs for standard trees
@@ -107,8 +119,11 @@ OTS_CLASSIC = "classic"
 OTS_TW      = "tw"
 OTS_WC      = "wc"
 
-# WOTS+C target digit sums S_wn = floor(l1*(w-1)/2)
-WOTS_C_PAIRS = [(16, 240), (32, 387), (256, 2040)]
+# WOTS+C target digit sums S_wn = floor(l1*(w-1)/2), where l1 = ceil(8n/log2(w))
+# w=16:  l1=32, S_wn = 32*15/2 = 240
+# w=32:  l1=26, S_wn = 26*31/2 = 403
+# w=256: l1=16, S_wn = 16*255/2 = 2040
+WOTS_C_PAIRS = [(16, 240), (32, 403), (256, 2040)]
 WOTS_W_VALS  = [16, 32, 256]
 
 PARAM_SETS = (
@@ -129,8 +144,12 @@ def ots_label(ots_type, w, swn):
 
 
 def wots_l(w, ots_type):
-    """Total Winternitz chain count l."""
-    l1 = N * 8 // int(log(w, 2))
+    """Total Winternitz chain count l, per FIPS 205 §11.
+
+    l1 = ceil(8n / log2(w)) — message chains
+    l2 = floor(log2(l1*(w-1)) / log2(w)) + 1 — checksum chains (WOTS-TW/classic only)
+    """
+    l1 = int(ceil(N * 8 / log(w, 2)))
     if ots_type == OTS_WC:
         return int(l1)
     l2 = int(ceil(log(l1 * (w - 1), 2) / log(w, 2)))
@@ -161,7 +180,7 @@ def wots_sign_C(w, swn, ots_type):
 
 
 def wots_verify_worst_steps(w, ots_type):
-    l1 = N * 8 // int(log(w, 2))
+    l1 = int(ceil(N * 8 / log(w, 2)))
     l2 = int(ceil(log(l1 * (w - 1), 2) / log(w, 2)))
     C = l1 * (w - 1)
     ds = 0
@@ -210,7 +229,7 @@ def tree_verify_C(h_prime, w, swn, ots_type, worst_case=False):
 def xmss_size_h(h, w, ots_type):
     l   = wots_l(w, ots_type)
     ctr = C_SIZE if ots_type == OTS_WC else 0
-    return R_SIZE + ctr + l * N + h * N + IDX_SIZE
+    return R_SIZE + ctr + l * N + h * N + idx_bytes(h)
 
 
 def xmss_keygen_C_h(h, w, ots_type):
@@ -246,7 +265,7 @@ def compute_xmss_rows(h):
 
 def xmssmt_size_h(h, d, w, ots_type):
     h_prime = h // d
-    return R_SIZE + d * tree_size_per_layer(h_prime, w, ots_type) + IDX_SIZE
+    return R_SIZE + d * tree_size_per_layer(h_prime, w, ots_type) + idx_bytes(h)
 
 
 def xmssmt_keygen_C_h(h, d, w, ots_type):
@@ -294,20 +313,36 @@ def compute_xmssmt_rows(h):
             ))
     return rows
 
-def find_reference_spx(q_s_log2, w=16):
-    return dict(h=45, d=5, k=8, a=16, w=16, size=5712, security=128.0)
+def _uxmss_idx_bytes(hsf):
+    """UXMSS supports hsf+1 signatures; index only needs to distinguish those."""
+    if hsf <= 0:
+        return 1
+    return max(1, int(ceil(log(hsf + 1, 2) / 8)))
+
 
 def find_max_hsf(w, ots_type, target_size):
-    l     = wots_l(w, ots_type)
-    ctr   = C_SIZE if ots_type == OTS_WC else 0
-    avail = target_size - 1 - R_SIZE - ctr - l * N - IDX_SIZE
-    return max(0, int(avail // N))
+    """Return the largest hsf such that uxmss_size(*, hsf, ...) is strictly < target_size.
+
+    Because idx_bytes depends on hsf, we use a small fixed-point loop.
+    """
+    l   = wots_l(w, ots_type)
+    ctr = C_SIZE if ots_type == OTS_WC else 0
+    hsf = 0
+    # Iterate until the index-byte assumption is self-consistent.
+    for _ in range(64):
+        idx = _uxmss_idx_bytes(hsf)
+        avail = target_size - 1 - R_SIZE - ctr - l * N - idx
+        new_hsf = max(0, int(avail // N))
+        if new_hsf == hsf:
+            return hsf
+        hsf = new_hsf
+    return hsf
 
 
 def uxmss_size(q, hsf, w, ots_type):
     l   = wots_l(w, ots_type)
     ctr = C_SIZE if ots_type == OTS_WC else 0
-    return R_SIZE + ctr + l * N + min(q, hsf) * N + IDX_SIZE
+    return R_SIZE + ctr + l * N + min(q, hsf) * N + _uxmss_idx_bytes(hsf)
 
 
 def uxmss_keygen_C(hsf, w, ots_type):
@@ -589,9 +624,9 @@ if __name__ == "__main__":
         print("=" * 72)
         print(" Reference configurations ".center(72, "="))
         print("=" * 72)
-        for h in UXMSS_H_VALS:
-            r = refs.get(h)
+        for h_target in UXMSS_H_VALS:
+            r = refs.get(h_target)
             if r and r.get('security') is not None:
-                print("  target=2^{}: SPX h={h},d={d},k={k},a={a},w={w}  "
-                      "({security:.1f}-bit)  {size} B".format(h, **r))
+                print("  target=2^{target}: SPX h={h},d={d},k={k},a={a},w={w}  "
+                      "({security:.1f}-bit)  {size} B".format(target=h_target, **r))
         print()
